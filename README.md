@@ -6,13 +6,13 @@ This guide provides instructions to set up a Docker environment for Isaac Sim, i
 
 ### 1. Install NVIDIA Driver
 
-Ensure the NVIDIA driver is installed. The recommended version is 535.129.03 for Linux.
-Since the 
+Ensure the necessary packages are installed using the following commands:
 
 ```sh
 sudo apt-get update
 sudo apt install build-essential -y
 ```
+Ensure the NVIDIA driver is installed. The recommended version is 535.129.03 for Linux.
 
 Since NVIDIA installed before, **you can ignore the following steps**. If not, you can install the NVIDIA driver using the following commands:
 ```sh
