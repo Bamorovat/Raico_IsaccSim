@@ -5,22 +5,33 @@
 To start the Docker container, run the following command. This command mounts the current directory to `/workspace` inside the container, making your project files accessible within the container:
 
 ```bash
-docker run --gpus all -it --rm --name rl-container -v $(pwd):/workspace rl-isaac-sim-pytorch-ros2
+# Run Isaac Sim Docker Container
+echo "Running Isaac Sim Docker Container..."
+docker run --name isaac-sim --entrypoint bash -it --runtime=nvidia --gpus all -e "ACCEPT_EULA=Y" --rm --network=host \
+    -e "PRIVACY_CONSENT=Y" \
+    -v ~/docker/isaac-sim/cache/kit:/isaac-sim/kit/cache:rw \
+    -v ~/docker/isaac-sim/cache/ov:/root/.cache/ov:rw \
+    -v ~/docker/isaac-sim/cache/pip:/root/.cache/pip:rw \
+    -v ~/docker/isaac-sim/cache/glcache:/root/.cache/nvidia/GLCache:rw \
+    -v ~/docker/isaac-sim/cache/computecache:/root/.nv/ComputeCache:rw \
+    -v ~/docker/isaac-sim/logs:/root/.nvidia-omniverse/logs:rw \
+    -v ~/docker/isaac-sim/data:/root/.local/share/ov/data:rw \
+    -v ~/docker/isaac-sim/documents:/root/Documents:rw \
+    nvcr.io/nvidia/isaac-sim:2023.1.0
 ```
 
 Command breakdown:
 - `--gpus all`: Enables GPU access for the container.
 - `-it`: Starts the container in interactive mode.
 - `--rm`: Removes the container when it is stopped.
-- `--name rl-container`: Assigns the name `rl-container` to the container.
-- `-v $(pwd):/workspace`: Mounts the current directory to `/workspace` inside the container.
+- `--name isaac-sim`: Assigns the name `isaac-sim` to the container.
 
 ## Accessing the Container
 
 If the container is already running, you can access it by using:
 
 ```bash
-docker exec -it rl-container /bin/bash
+docker exec -it isaac-sim /bin/bash
 ```
 This command attaches to the running container, allowing you to interact with it using a bash shell.
 
