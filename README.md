@@ -78,5 +78,5 @@ For more detailed information, refer to the [Isaac Sim Docker Setup](https://doc
 
 This `README.md` file includes all the necessary steps for setting up the NVIDIA driver, Docker, and the NVIDIA Container Toolkit, followed by the script to run Isaac Sim in a Docker container. Each team member can follow these instructions to get their environment set up correctly.
 
-
+For more details to use of a docker file read the `Help.md` file.
 
