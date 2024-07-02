@@ -2,7 +2,7 @@
 
 ## Starting the Docker Container
 
-To start the Docker container, run the following command. This command mounts the current directory to `/workspace` inside the container, making your project files accessible within the container:
+To start the **Isaac-Sim** Docker container, run the following command. This command mounts the current directory to `/workspace` inside the container, making your project files accessible within the container:
 
 ```bash
 # Run Isaac Sim Docker Container
@@ -28,12 +28,37 @@ Command breakdown:
 - `--rm`: Removes the container when it is stopped.
 - `--name isaac-sim`: Assigns the name `isaac-sim` to the container.
 
+To Start the **Issac-Sim-Humble** Docker Container, run the following command:
+
+```bash
+```bash
+# Run Isaac Sim Humble Docker Container
+echo "Running Isaac Sim Docker Container..."
+docker run --entrypoint bash -it --runtime=nvidia --gpus all -e "ACCEPT_EULA=Y" --rm --network=host \
+    -e "PRIVACY_CONSENT=Y" \
+    -e DISPLAY=$DISPLAY \
+    -v /tmp/.X11-unix:/tmp/.X11-unix \
+    -v ~/docker/isaac-sim-humble/cache/kit:/isaac-sim-humble/kit/cache:rw \
+    -v ~/docker/isaac-sim-humble/cache/ov:/root/.cache/ov:rw \
+    -v ~/docker/isaac-sim-humble/cache/pip:/root/.cache/pip:rw \
+    -v ~/docker/isaac-sim-humble/cache/glcache:/root/.cache/nvidia/GLCache:rw \
+    -v ~/docker/isaac-sim-humble/cache/computecache:/root/.nv/ComputeCache:rw \
+    -v ~/docker/isaac-sim-humble/logs:/root/.nvidia-omniverse/logs:rw \
+    -v ~/docker/isaac-sim-humble/data:/root/.local/share/ov/data:rw \
+    -v ~/docker/isaac-sim-humble/documents:/root/Documents:rw \
+    isaac-sim-humble:latest
+```
+
 ## Accessing the Container
 
 If the container is already running, you can access it by using:
 
 ```bash
 docker exec -it isaac-sim /bin/bash
+```
+or 
+```bash
+docker exec -it isaac-sim-humble:latest 
 ```
 This command attaches to the running container, allowing you to interact with it using a bash shell.
 

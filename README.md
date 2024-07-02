@@ -1,82 +1,87 @@
-# Isaac Sim Docker Setup
+# Isaac Sim Docker Image with ROS 2 Humble
 
-This guide provides instructions to set up a Docker environment for Isaac Sim, including necessary prerequisites and setup steps.
+This README provides detailed instructions on how to download, load, and use the `isaac-sim-humble` Docker image, which includes Isaac Sim and ROS 2 Humble.
 
 ## Prerequisites
 
-### 1. Install NVIDIA Driver
+Before you begin, ensure you have the following:
+- Docker installed on your local machine. You can download and install Docker from [here](https://www.docker.com/products/docker-desktop).
+- Access to the internet to download the Docker image from SharePoint.
 
-Ensure the necessary packages are installed using the following commands:
+## Downloading the Docker Image
 
-```sh
-sudo apt-get update
-sudo apt install build-essential -y
-```
-Ensure the NVIDIA driver is installed. The recommended version is 535.129.03 for Linux.
+1. **Open your web browser** and navigate to the following SharePoint link:
+   [Download Isaac Sim Docker Image](https://livemanchesterac.sharepoint.com/:u:/r/sites/UOM-FSE-EEE-REEL-at-RAICo/Shared%20Documents/General/REEL/Software/Docker_Images/isaac-sim-humble.tar?csf=1&web=1&e=AC90V3)
 
-Since NVIDIA installed before, **you can ignore the following steps**. If not, you can install the NVIDIA driver using the following commands:
-```sh
-wget https://us.download.nvidia.com/XFree86/Linux-x86_64/535.129.03/NVIDIA-Linux-x86_64-535.129.03.run
-chmod +x NVIDIA-Linux-x86_64-535.129.03.run
-sudo ./NVIDIA-Linux-x86_64-535.129.03.run
-```
+2. **Download the `isaac-sim-humble.tar` file** to a directory on your local machine. Ensure that you have enough space as the file is quite large.
 
-### 2. Install Docker
+## Loading the Docker Image
 
-Install Docker using the following commands:
+1. **Open a terminal** on your local machine.
 
-```sh
-curl -fsSL https://get.docker.com -o get-docker.sh
-sudo sh get-docker.sh
-sudo groupadd docker
-sudo usermod -aG docker $USER
-newgrp docker
-docker run  hello-world
-```
+2. **Navigate to the directory** where you downloaded the `isaac-sim-humble.tar` file. Replace `/path/to/download/directory` with the actual path to the directory:
+   ```sh
+   cd /path/to/download/directory
+    ```
+3. **Load the Docker image** using the following command:
+   ```sh
+   docker load -i isaac-sim-humble.tar
+   ```
+    This command imports the Docker image into your local Docker environment. You should see output indicating that the image is being loaded.
 
-### 3. Install NVIDIA Container Toolkit
+## Running the Docker Container
 
-Install the NVIDIA Container Toolkit using the following commands:
+1. Start the Docker container using the following command:
 
-```sh
-curl -fsSL https://nvidia.github.io/libnvidia-container/gpgkey | sudo gpg --dearmor -o /usr/share/keyrings/nvidia-container-toolkit-keyring.gpg
-curl -s -L https://nvidia.github.io/libnvidia-container/stable/deb/nvidia-container-toolkit.list | \
-    sed 's#deb https://#deb [signed-by=/usr/share/keyrings/nvidia-container-toolkit-keyring.gpg] https://#g' | \
-    sudo tee /etc/apt/sources.list.d/nvidia-container-toolkit.list
-sudo apt-get update
-sudo apt-get install -y nvidia-container-toolkit
-sudo systemctl restart docker
-sudo nvidia-ctk runtime configure --runtime=docker
-sudo systemctl restart docker
-docker run --rm --runtime=nvidia --gpus all ubuntu nvidia-smi
-```
-
-## Instructions for Team Members
-
-### Make the Script Executable
-
-Open your terminal and navigate to the directory where you saved the script. Run the following command to make the script executable:
-
-```sh
-chmod +x setup_isaac_sim_docker.sh
+```bash
+# Run Isaac Sim Humble Docker Container
+echo "Running Isaac Sim Docker Container..."
+docker run --entrypoint bash -it --runtime=nvidia --gpus all -e "ACCEPT_EULA=Y" --rm --network=host \
+    -e "PRIVACY_CONSENT=Y" \
+    -e DISPLAY=$DISPLAY \
+    -v /tmp/.X11-unix:/tmp/.X11-unix \
+    -v ~/docker/isaac-sim-humble/cache/kit:/isaac-sim-humble/kit/cache:rw \
+    -v ~/docker/isaac-sim-humble/cache/ov:/root/.cache/ov:rw \
+    -v ~/docker/isaac-sim-humble/cache/pip:/root/.cache/pip:rw \
+    -v ~/docker/isaac-sim-humble/cache/glcache:/root/.cache/nvidia/GLCache:rw \
+    -v ~/docker/isaac-sim-humble/cache/computecache:/root/.nv/ComputeCache:rw \
+    -v ~/docker/isaac-sim-humble/logs:/root/.nvidia-omniverse/logs:rw \
+    -v ~/docker/isaac-sim-humble/data:/root/.local/share/ov/data:rw \
+    -v ~/docker/isaac-sim-humble/documents:/root/Documents:rw \
+    isaac-sim-humble:latest
 ```
 
-### Run the Script
+This command does the following:
 
-Before running the script, ensure that you have generated your **NGC API Key**. You can generate your API Key by following the instructions in the [NVIDIA NGC Documentation](https://docs.nvidia.com/ngc/ngc-overview/index.html#generating-api-key).
+- `--entrypoint bash`: Ensures that the entry point is set to bash.
+- `-it`: Runs the container in interactive mode with a terminal.
+- `--runtime=nvidia`: Specifies the use of NVIDIA runtime.
+- `--gpus all`: Allocates all GPUs to the container.
+- `-e "ACCEPT_EULA=Y"` and `-e "PRIVACY_CONSENT=Y"`: Sets environment variables to accept the EULA and privacy consent.
+- `--rm`: Automatically removes the container when it exits.
+- `--network=host`: Uses the host's network stack.
+- `-e DISPLAY=$DISPLAY`: Sets the DISPLAY environment variable for X11 forwarding.
+- `-v /tmp/.X11-unix:/tmp/.X11-unix`: Mounts the X11 socket.
+- Other `-v` options: Mounts various directories for caching and logging purposes.
 
-Run the script using the following command:
+2. Verify you are inside the container by checking the command prompt. It should look something like this:
+    ```sh
+    root@<container_id>:/#
+    ```
+    This indicates that you are inside the Docker container.
 
-```sh
-./setup_isaac_sim_docker.sh
-```
+## Using ROS 2 Inside the Docker Container
 
-This script automates the setup and execution of the Isaac Sim Docker container, including necessary mounts and environment variables. Each team member can run this script to set up their environment correctly.
+1. Source the ROS 2 setup script by running the following command inside the container:
+    ```sh
+    source /opt/ros/humble/setup.bash
+    ```
+    This command sets up the ROS 2 environment inside the container.
 
-For more detailed information, refer to the [Isaac Sim Docker Setup](https://docs.omniverse.nvidia.com/isaacsim/latest/installation/install_container.html) documentation.
-
-
-This `README.md` file includes all the necessary steps for setting up the NVIDIA driver, Docker, and the NVIDIA Container Toolkit, followed by the script to run Isaac Sim in a Docker container. Each team member can follow these instructions to get their environment set up correctly.
-
-For more details to use of a docker file read the `Help.md` file.
+2. Verify that ROS 2 is installed correctly by running the following command:
+    ```sh
+    ros2 --help
+    ros2 pkg list
+    ```
+    This commands should display the ROS 2 help message and a list of installed ROS 2 packages.
 
