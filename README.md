@@ -1,6 +1,21 @@
 # Isaac Sim Docker Image with ROS 2 Humble
 
-This README provides detailed instructions on how to download, load, and use the `isaac-sim-humble` Docker image, which includes Isaac Sim and ROS 2 Humble.
+## Introduction
+
+Welcome to the Isaac Sim Humble Docker setup guide. This document provides comprehensive instructions on how to download, load, and use the `isaac-sim-humble` Docker image, which includes both Isaac Sim and ROS 2 Humble. 
+
+For more detailed instructions on specific tasks, you can refer to the following additional documentation:
+- **`Isaac-Sim Docker Setup.md`**: This file includes detailed information on the setup and configuration of the original Isaac Sim Docker container.
+- **`help.md`**: This file provides detailed help on using the Docker image, including running the container and troubleshooting common issues.
+
+## Table of Contents
+
+1. [Introduction](#introduction)
+2. [Prerequisites](#prerequisites)
+2. [Downloading the Docker Image](#downloading-the-docker-image)
+3. [Loading the Docker Image](#loading-the-docker-image)
+4. [Running the Docker Container](#running-the-docker-container)
+5. [Using ROS 2 Inside the Container](#using-ros-2-inside-the-container)
 
 ## Prerequisites
 
@@ -29,7 +44,7 @@ Before you begin, ensure you have the following:
    ```
     This command imports the Docker image into your local Docker environment. You should see output indicating that the image is being loaded.
 
-## Running the Docker Container
+## Running the Isaac SIm Humble Docker Container
 
 1. Start the Docker container using the following command:
 
